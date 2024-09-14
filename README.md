@@ -1,6 +1,6 @@
 # E-Commerce Backend API
 
-A comprehensive backend for an E-commerce platform, built with Node.js and MongoDB. This API handles product management, user authentication, category, subcategory, and brand management, with support for efficient validation and error handling. The API is tested using Postman for ensuring reliable and consistent operations.
+A comprehensive backend for an E-commerce platform, built with Node.js and MongoDB. This API handles product management, user authentication, category, subcategory, brand, and Product management, with support for efficient validation and error handling. The API is tested using Postman for ensuring reliable and consistent operations.
 
 ## Table of Contents
 

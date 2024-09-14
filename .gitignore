@@ -1,3 +1,4 @@
 node_modules/
 utils/dummydata/
 config.env
+.DS_Store

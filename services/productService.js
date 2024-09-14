@@ -2,6 +2,7 @@ const slugify = require("slugify");
 const asyncHandler = require("express-async-handlr");
 const productModel = require("../models/productModel");
 const ApiError = require("../utils/apiError");
+const ApiFeatures = require("../utils/apiFeatures");
 
 // @desc create product
 // @route POST /api/v1/products
@@ -16,20 +17,22 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
 // @route GET /api/v1/products
 // @access public
 exports.getProducts = asyncHandler(async (req, res) => {
-  // eslint-disable-next-line node/no-unsupported-features/es-syntax
-  const { page, limit, ...filteringObject } = req.query;
-  console.log(req.query);
-  const currentpage = page * 1 || 1;
-  const pagelimit = limit * 1 || 5;
-  const skip = (currentpage - 1) * pagelimit;
+  const count = await productModel.countDocuments();
+  const apiFeatures = new ApiFeatures(
+    productModel.find().populate({ path: "category", select: "name -_id" }),
+    req.query
+  )
+    .pagination(count)
+    .filter()
+    .search("product")
+    .selectFields()
+    .sort();
 
-  console.log(filteringObject);
-  const products = await productModel
-    .find(filteringObject)
-    .skip(skip)
-    .limit(pagelimit)
-    .populate({ path: "category", select: "name -_id" });
-  res.status(200).json({ results: products.length, page, data: products });
+  const { mongooseQuery, paginationResults } = apiFeatures;
+  const products = await mongooseQuery;
+  res
+    .status(200)
+    .json({ results: products.length, paginationResults, data: products });
 });
 
 // @desc   get specific product
